@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸运转盘</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>幸运转盘</h1>
+            <div class="user-controls">
+                <input type="text" id="username" placeholder="请输入用户名">
+                <button id="switchUser">切换用户</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="wheel-section">
+                <div class="wheel-container">
+                    <div class="wheel" id="lucky-wheel">
+                    </div>
+                    <div class="pointer"></div>
+                </div>
+                <div class="wheel-info">
+                    <h2>当前奖池: <span id="current-wheel">1级奖池</span></h2>
+                    <p><span id="remaining-spins">还差12抽升级奖池</span></p>
+                    <button id="spin-button">开始抽奖</button>
+                </div>
+            </div>
+
+            <div class="prize-section">
+                <div class="prize-inventory">
+                    <h2>奖品库存</h2>
+                    <div id="prize-list"></div>
+                </div>
+                <div class="fragments-progress">
+                    <h2>碎片进度</h2>
+                    <div id="fragments-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-panel">
+            <h2>管理面板</h2>
+            <div class="prize-settings">
+                <div class="prize-setup">
+                    <h3>奖品设置</h3>
+                    <div class="prize-form">
+                        <input type="text" id="prize-name" placeholder="奖品名称">
+                        <input type="number" id="fragment-count" placeholder="碎片数量（若为碎片奖品）">
+                        <label class="not-counted-label">
+                            <input type="checkbox" id="not-counted"> 不计入奖品
+                        </label>
+                        <button id="add-prize">添加奖品</button>
+                    </div>
+                    <div id="prize-table"></div>
+                </div>
+                <div class="wheel-setup">
+                    <h3>奖池设置</h3>
+                    <select id="wheel-selector">
+                        <option value="1">1级奖池</option>
+                        <option value="2">2级奖池</option>
+                        <option value="3">3级奖池</option>
+                        <option value="4">4级奖池</option>
+                        <option value="5">5级奖池</option>
+                    </select>
+                    <div id="wheel-prize-settings"></div>
+                </div>
+            </div>
+            <div class="data-controls">
+                <button id="export-data">导出数据</button>
+                <button id="reset-data">重置数据</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/wheel.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html> 
