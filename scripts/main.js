@@ -30,14 +30,19 @@ document.getElementById('add-prize').addEventListener('click', () => {
     }
 
     const prize = storage.addPrize(name, fragmentCount, notCounted);
+    
+    // 更新显示
     updatePrizeTable();
-    updateWheelPrizeSettings();
+    updateWheelPrizeSettings(parseInt(document.getElementById('wheel-selector').value));
     updatePrizeList();
     
     // 清空输入框
     document.getElementById('prize-name').value = '';
     document.getElementById('fragment-count').value = '';
     document.getElementById('not-counted').checked = false;
+    
+    // 重置奖品选择器
+    document.getElementById('wheel-prize-selector').value = '';
 });
 
 // 转盘设置
@@ -73,6 +78,62 @@ document.getElementById('reset-data').addEventListener('click', () => {
         wheel.renderWheel();
         wheel.updateInventoryDisplay();
         document.getElementById('username').value = '';
+    }
+});
+
+// 转盘设置导出
+document.getElementById('export-wheel-settings').addEventListener('click', () => {
+    const settings = storage.exportWheelSettings();
+    const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '转盘设置.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+});
+
+// 转盘设置导入
+document.getElementById('import-wheel-settings').addEventListener('click', () => {
+    document.getElementById('wheel-settings-file').click();
+});
+
+document.getElementById('wheel-settings-file').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        try {
+            const settings = JSON.parse(event.target.result);
+            if (storage.importWheelSettings(settings)) {
+                alert('转盘设置导入成功！');
+                updatePrizeTable();
+                updateWheelPrizeSettings();
+                wheel.renderWheel();
+            } else {
+                alert('转盘设置导入失败，请检查文件格式！');
+            }
+        } catch (error) {
+            console.error('导入出错:', error);
+            alert('导入失败，请检查文件格式！');
+        }
+        e.target.value = ''; // 清空文件选择
+    };
+    reader.readAsText(file);
+});
+
+// 转盘设置重置
+document.getElementById('reset-wheel-settings').addEventListener('click', () => {
+    if (confirm('确定要重置所有转盘设置吗？这将清空所有奖品和转盘配置。')) {
+        storage.resetWheelSettings();
+        updatePrizeTable();
+        updateWheelPrizeSettings();
+        wheel.renderWheel();
+        alert('转盘设置已重置！');
     }
 });
 
@@ -120,9 +181,11 @@ function updateWheelPrizeSettings(wheelId = 1) {
                 </tr>
             </thead>
             <tbody>
-                ${wheel.prizes.map((prize, index) => `
+                ${wheel.prizes.map((prize, index) => {
+                    const displayName = prize.fragmentCount > 0 ? `${prize.name}碎片` : prize.name;
+                    return `
                     <tr>
-                        <td>${prize.name}</td>
+                        <td>${displayName}</td>
                         <td>
                             <input type="number" 
                                    value="${prize.weight || 1}" 
@@ -134,14 +197,15 @@ function updateWheelPrizeSettings(wheelId = 1) {
                             <button onclick="removeWheelPrize(${wheelId}, ${index})">删除</button>
                         </td>
                     </tr>
-                `).join('')}
+                `}).join('')}
             </tbody>
         </table>
         <div class="add-wheel-prize">
             <select id="wheel-prize-selector">
-                ${storage.prizes.map(prize => `
-                    <option value="${prize.id}">${prize.name}</option>
-                `).join('')}
+                ${storage.prizes.map(prize => {
+                    const displayName = prize.fragmentCount > 0 ? `${prize.name}碎片` : prize.name;
+                    return `<option value="${prize.id}">${displayName}</option>`;
+                }).join('')}
             </select>
             <input type="number" id="wheel-prize-weight" value="1" min="1" placeholder="权重">
             <button onclick="addWheelPrize(${wheelId})">添加奖品</button>

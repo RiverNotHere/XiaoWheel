@@ -91,7 +91,12 @@ class LuckyWheel {
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
 
-            const lines = this.wrapText(prize.name, radius * 0.35);
+            // 处理奖品名称显示
+            let displayName = prize.name;
+            if (prize.fragmentCount > 0) {
+                displayName = `${prize.name}碎片`;
+            }
+            const lines = this.wrapText(displayName, radius * 0.35);
             lines.forEach((line, i) => {
                 const lineOffset = (i - (lines.length - 1) / 2) * 20;
                 this.ctx.fillText(line, 0, lineOffset);
@@ -272,11 +277,12 @@ class LuckyWheel {
             }
 
             // 中奖提示框
+            const displayName = fullPrize.fragmentCount > 0 ? `${fullPrize.name}碎片` : fullPrize.name;
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
                 <div class="modal-content">
-                    <div class="prize-win">恭喜抽中：${prize.name}！</div>
+                    <div class="prize-win">恭喜抽中：${displayName}！</div>
                     <button onclick="this.parentElement.parentElement.remove()">确定</button>
                 </div>
             `;

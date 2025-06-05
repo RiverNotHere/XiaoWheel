@@ -266,9 +266,14 @@ button:hover {
 
 .data-controls {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     justify-content: flex-end;
     margin-top: 20px;
+}
+
+.data-controls button {
+    min-width: 120px;
 }
 
 table {

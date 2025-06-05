@@ -166,4 +166,46 @@ class Storage {
         this.currentUser = '';
         this.saveData();
     }
+
+    // 导出转盘设置
+    exportWheelSettings() {
+        return {
+            prizes: this.prizes,
+            wheelSettings: this.wheelSettings
+        };
+    }
+
+    // 导入转盘设置
+    importWheelSettings(data) {
+        try {
+            if (!data.prizes || !data.wheelSettings) {
+                throw new Error('无效的数据格式');
+            }
+
+            // 验证奖品数据格式
+            if (!Array.isArray(data.prizes)) {
+                throw new Error('奖品数据格式错误');
+            }
+
+            // 验证转盘设置格式
+            if (!Array.isArray(data.wheelSettings) || data.wheelSettings.length !== 5) {
+                throw new Error('转盘设置格式错误');
+            }
+
+            this.prizes = data.prizes;
+            this.wheelSettings = data.wheelSettings;
+            this.saveData();
+            return true;
+        } catch (error) {
+            console.error('导入转盘设置失败:', error.message);
+            return false;
+        }
+    }
+
+    // 重置转盘设置
+    resetWheelSettings() {
+        this.prizes = [];
+        this.wheelSettings = this.getDefaultWheelSettings();
+        this.saveData();
+    }
 } 

@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>幸运转盘</title>
+    <title>潇潇黑盘</title>
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>幸运转盘</h1>
+            <h1>潇潇黑盘 v1.0</h1>
             <div class="user-controls">
                 <input type="text" id="username" placeholder="请输入用户名">
                 <button id="switchUser">切换用户</button>
@@ -70,8 +70,12 @@
                 </div>
             </div>
             <div class="data-controls">
-                <button id="export-data">导出数据</button>
-                <button id="reset-data">重置数据</button>
+                <button id="export-data">导出用户数据</button>
+                <button id="reset-data">重置用户数据</button>
+                <button id="export-wheel-settings">导出转盘设置</button>
+                <button id="import-wheel-settings">导入转盘设置</button>
+                <button id="reset-wheel-settings">重置转盘设置</button>
+                <input type="file" id="wheel-settings-file" style="display: none" accept=".json">
             </div>
         </div>
     </div>
